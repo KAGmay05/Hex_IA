@@ -1,2 +1,7 @@
 board.py
 player.py
+test.py
+play.py
+
+__pycache__/
+*.py[cod]
