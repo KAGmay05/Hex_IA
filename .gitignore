@@ -2,6 +2,7 @@ board.py
 player.py
 test.py
 play.py
+play_gui.py
 
 __pycache__/
 *.py[cod]
