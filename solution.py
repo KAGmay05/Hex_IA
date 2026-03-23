@@ -8,7 +8,6 @@ from math import sqrt, log
 def get_neighbors(board, row, col):
     size = board.size
 
-    # even-r layout: even rows shifted right
     if row % 2 == 0:
         directions = [
             (-1, 0), (-1, 1),
@@ -30,51 +29,6 @@ def get_neighbors(board, row, col):
             neighbors.append((nr,nc))
 
     return neighbors
-
-
-def has_won(board, player_id):
-
-    size=board.size
-    visited=set()
-
-    def dfs(r,c):
-
-        visited.add((r,c))
-
-        if player_id==1 and c==size-1:
-            return True
-
-        if player_id==2 and r==size-1:
-            return True
-
-        for nr,nc in get_neighbors(board,r,c):
-
-            if (nr,nc) not in visited and board.board[nr][nc]==player_id:
-
-                if dfs(nr,nc):
-                    return True
-
-        return False
-
-    if player_id==1:
-
-        for r in range(size):
-
-            if board.board[r][0]==1:
-
-                if dfs(r,0):
-                    return True
-
-    else:
-
-        for c in range(size):
-
-            if board.board[0][c]==2:
-
-                if dfs(0,c):
-                    return True
-
-    return False
 
 
 def shortest_path(board,player):
@@ -252,14 +206,14 @@ class SmartPlayer(Player):
 
         for r, c in all_empties:
             board.board[r][c] = self.player_id
-            if has_won(board, self.player_id):
+            if board.check_connection(self.player_id):
                 board.board[r][c] = 0
                 return (r, c)
             board.board[r][c] = 0
 
         for r, c in all_empties:
             board.board[r][c] = self.opponent
-            if has_won(board, self.opponent):
+            if board.check_connection(self.opponent):
                 board.board[r][c] = 0
                 return (r, c)
             board.board[r][c] = 0
@@ -386,7 +340,6 @@ class SmartPlayer(Player):
                         uf2.union(idx, nr * size + nc)
 
             current = 3 - current
-
-        # Player 1 wins if LEFT connected to RIGHT
+            
         winner = 1 if uf1.connected(LEFT, RIGHT) else 2
         return p1_moves, p2_moves, winner
